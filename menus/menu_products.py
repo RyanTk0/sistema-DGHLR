@@ -30,7 +30,7 @@ def menu_products():
             produtos = Product.listar()
 
             if isinstance(produtos, dict) and not produtos.get("success", True):
-                print("\n❌ Erro ao listar produtos:", produtos["error"])
+                print("\n Erro ao listar produtos:", produtos["error"])
             else:
                 print("\n===== LISTA DE PRODUTOS =====\n")
                 print(f"{'ID':<5} | {'Nome':<15} | {'Preço (R$)':<10} | {'Estoque':<10}")
