@@ -2,78 +2,76 @@ from models.products import Product
 
 def menu_products():
     while True:
-        print("\n===== MENU DE PRODUTOS =====")
+        print("\n=============== MENU - PRODUTOS ===============")
         print("1 - Cadastrar produto")
         print("2 - Listar produtos")
         print("3 - Editar produto")
         print("4 - Excluir produto")
         print("0 - Voltar")
 
-        opcao = input("Escolha: ")
+        opc = input("\nEscolha: ")
 
-        if opcao == "1":
-            nome = input("Nome: ")
-            descricao = input("Descrição: ")
-
+        if opc == "1":
             try:
-                preco = float(input("Preço: "))
-            except:
-                print("Preço inválido!")
-                input("\nPressione ENTER para continuar...")
-                continue
-
-            try:
+                nome = input("Nome do produto: ")
+                preco = float(input("Preço do produto (R$): "))
                 estoque = int(input("Estoque: "))
-            except:
-                print("Estoque inválido!")
-                input("\nPressione ENTER para continuar...")
+                if preco <= 0 or estoque < 0:
+                    print("O preço deve ser maior que zero e o estoque não pode ser negativo!")
+                    continue
+            except ValueError:
+                print("Valores inválidos! O preço e estoque devem ser números válidos.")
                 continue
 
-            Product(nome, descricao, preco, estoque).salvar()
+            Product(nome, preco, estoque).salvar()
+            input("\nPressione 'Enter' para continuar...")
 
-        elif opcao == "2":
-            Product.listar()
+        elif opc == "2":
+            produtos = Product.listar()
 
-        elif opcao == "3":
+            if isinstance(produtos, dict) and not produtos.get("success", True):
+                print("\n❌ Erro ao listar produtos:", produtos["error"])
+            else:
+                print("\n===== LISTA DE PRODUTOS =====\n")
+                print(f"{'ID':<5} | {'Nome':<15} | {'Preço (R$)':<10} | {'Estoque':<10}")
+                print("-" * 50)
+                for p in produtos:
+                    print(f"{p['id']:<5} | {p['name']:<15} | R$ {p['price']:<10.2f} | {p['stock']:<10}")
+                print("=" * 50)
+
+            input("\nPressione 'Enter' para continuar...")
+
+        elif opc == "3":
             try:
-                id_prod = int(input("ID do produto a editar: "))
-            except:
-                print("ID inválido!")
-                input("\nPressione ENTER para continuar...")
+                id_produto = int(input("ID do produto a modificar: "))
+            except ValueError:
+                print("ID inválido! O ID do produto deve ser um número inteiro.")
                 continue
 
-            novo_nome = input("Novo nome: ")
-            nova_desc = input("Nova descrição: ")
+            novo_nome = input("Novo nome (ou Enter p/ manter): ")
+            novo_preco = input("Novo preço (ou Enter p/ manter): ")
+            novo_estoque = input("Novo estoque (ou Enter p/ manter): ")
 
+            nome_val = novo_nome if novo_nome.strip() else None
+            preco_val = float(novo_preco) if novo_preco.strip() else None
+            estoque_val = int(novo_estoque) if novo_estoque.strip() else None
+
+            Product.editar(id_produto, nome_val, preco_val, estoque_val)
+            input("\nPressione 'Enter' para continuar...")
+
+        elif opc == "4":
             try:
-                novo_preco = float(input("Novo preço: "))
-            except:
-                print("Preço inválido!")
-                input("\nPressione ENTER para continuar...")
+                id_produto = int(input("ID do produto a excluir: "))
+            except ValueError:
+                print("ID inválido! O ID do produto deve ser um número inteiro.")
                 continue
 
-            try:
-                novo_estoque = int(input("Novo estoque: "))
-            except:
-                print("Estoque inválido!")
-                input("\nPressione ENTER para continuar...")
-                continue
+            Product.excluir(id_produto)
+            input("\nPressione 'Enter' para continuar...")
 
-            Product.editar(id_prod, novo_nome, nova_desc, novo_preco, novo_estoque)
-
-        elif opcao == "4":
-            try:
-                id_prod = int(input("ID do produto a excluir: "))
-            except:
-                print("ID inválido!")
-                input("\nPressione ENTER para continuar...")
-                continue
-
-            Product.excluir(id_prod)
-
-        elif opcao == "0":
+        elif opc == "0":
             break
 
         else:
             print("Opção inválida!")
-            input("\nPressione ENTER para continuar...")
+            input("\nEnter para continuar...")

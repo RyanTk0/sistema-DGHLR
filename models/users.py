@@ -4,7 +4,6 @@ import re
 
 from banco_dados.connection import Transições
 
-
 class User:
 
     def __init__(self, name, email, role_id):
@@ -52,7 +51,6 @@ class User:
                 print(f"Erro ao cadastrar usuário: {e}")
             input("\nPressione 'Enter' para continuar...")
 
-
     @staticmethod
     def listar():
         try:
@@ -65,15 +63,11 @@ class User:
             else:
                 print("\n=========== USUÁRIOS CADASTRADOS ===========\n")
                 for u in users:
-                    print(
-                        f"{u['id']} - {u['name']} | {u['email']} | role_id={u['role_id']} "
-                        f"| criado em {u['created_at']}"
-                    )
+                    print(f"{u['id']} - {u['name']} | {u['email']} | role_id={u['role_id']} | criado em {u['created_at']}")
 
         except Exception as e:
             print(f"Erro ao listar usuários: {e}")
         input("\nPressione 'Enter' para continuar...")
-
 
     @staticmethod
     def editar(id_user, novo_nome, novo_email, novo_role_id):
@@ -116,7 +110,6 @@ class User:
             else:
                 print(f"Erro ao atualizar usuário: {e}")
         input("\nPressione 'Enter' para continuar...")
-
 
     @staticmethod
     def excluir(id_user):

@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import re
-
 from banco_dados.connection import Transições
-
 
 class Product:
 
@@ -16,17 +14,14 @@ class Product:
 
         if not self.name:
             print("O nome do produto é obrigatório.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         if not isinstance(self.price, (int, float)) or self.price <= 0:
             print("O preço deve ser um número maior que zero.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         if not isinstance(self.stock, int) or self.stock < 0:
             print("O estoque deve ser um número inteiro maior ou igual a zero.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         try:
@@ -46,8 +41,6 @@ class Product:
             else:
                 print(f"Erro ao cadastrar produto: {e}")
 
-        input("\nPressione 'Enter' para continuar...")
-
     @staticmethod
     def listar():
         try:
@@ -61,6 +54,7 @@ class Product:
 
             if not produtos:
                 print("Nenhum produto cadastrado.")
+                return []  
             else:
                 print("\n=========== PRODUTOS ===========\n")
                 for p in produtos:
@@ -69,11 +63,11 @@ class Product:
                         f"R${p['price']} | Estoque: {p['stock']} "
                         f"| Criado em {p['created_at']}"
                     )
+                return produtos  
 
         except Exception as e:
             print(f"Erro ao listar produtos: {e}")
-
-        input("\nPressione 'Enter' para continuar...")
+            return []
 
     @staticmethod
     def editar(id_produto, novo_nome, novo_preco, novo_estoque):
@@ -116,8 +110,6 @@ class Product:
             else:
                 print(f"Erro ao atualizar produto: {e}")
 
-        input("\nPressione 'Enter' para continuar...")
-
     @staticmethod
     def excluir(id_produto):
         try:
@@ -134,5 +126,3 @@ class Product:
                 print("Este produto está em algum pedido e não pode ser excluído.")
             else:
                 print(f"Erro ao excluir produto: {e}")
-
-        input("\nPressione 'Enter' para continuar...")

@@ -2,8 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from banco_dados.connection import Transições
-
-
+from models.orders import Order  
 class OrderItem:
 
     def __init__(self, order_id, product_id, quantity, price):
@@ -13,15 +12,12 @@ class OrderItem:
         self.price = price
 
     def salvar(self):
-
         if not isinstance(self.order_id, int) or self.order_id <= 0:
             print("ID do pedido inválido.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         if not isinstance(self.product_id, int) or self.product_id <= 0:
             print("ID do produto inválido.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         try:
@@ -30,7 +26,6 @@ class OrderItem:
                 raise Exception
         except:
             print("Quantidade inválida. Use um número inteiro maior que zero.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         try:
@@ -39,7 +34,6 @@ class OrderItem:
                 raise Exception
         except:
             print("Preço inválido.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         try:
@@ -51,7 +45,6 @@ class OrderItem:
                     """,
                     (self.order_id, self.product_id, self.quantity, self.price)
                 )
-
                 print("Item do pedido cadastrado com sucesso!")
 
         except Exception as e:
@@ -59,8 +52,6 @@ class OrderItem:
                 print("ID de pedido ou produto não existe.")
             else:
                 print(f"Erro ao cadastrar item: {e}")
-
-        input("\nPressione 'Enter' para continuar...")
 
     @staticmethod
     def listar():
@@ -94,11 +85,8 @@ class OrderItem:
         except Exception as e:
             print(f"Erro ao listar itens: {e}")
 
-        input("\nPressione 'Enter' para continuar...")
-
     @staticmethod
     def modificar(item_id, quantity=None, price=None):
-
         if not isinstance(item_id, int) or item_id <= 0:
             print("ID do item inválido.")
             return
@@ -128,7 +116,6 @@ class OrderItem:
 
         if not campos:
             print("Nenhum campo informado.")
-            input("\nPressione 'Enter' para continuar...")
             return
 
         valores.append(item_id)
@@ -152,11 +139,8 @@ class OrderItem:
         except Exception as e:
             print(f"Erro ao modificar item: {e}")
 
-        input("\nPressione 'Enter' para continuar...")
-
     @staticmethod
     def excluir(item_id):
-
         if not isinstance(item_id, int) or item_id <= 0:
             print("ID inválido.")
             return
@@ -167,10 +151,9 @@ class OrderItem:
 
                 if cursor.rowcount > 0:
                     print("Item excluído com sucesso!")
+                    Order.atualizar_total_pedido(item_id)  
                 else:
                     print("Item não encontrado.")
 
         except Exception as e:
             print(f"Erro ao excluir item: {e}")
-
-        input("\nPressione 'Enter' para continuar...")

@@ -3,7 +3,6 @@ load_dotenv()
 
 from banco_dados.connection import Transições
 
-
 class ProductTag:
 
     def __init__(self, product_id, tag_id):
@@ -11,7 +10,6 @@ class ProductTag:
         self.tag_id = tag_id
 
     def salvar(self):
-
         if not isinstance(self.product_id, int) or self.product_id <= 0:
             print("O ID do produto é inválido.")
             input("\nPressione 'Enter' para continuar...")
@@ -78,7 +76,6 @@ class ProductTag:
 
     @staticmethod
     def excluir(product_id, tag_id):
-
         if not isinstance(product_id, int) or product_id <= 0:
             print("product_id inválido.")
             return
@@ -104,5 +101,62 @@ class ProductTag:
 
         except Exception as e:
             print(f"Erro ao excluir relação: {e}")
+
+        input("\nPressione 'Enter' para continuar...")
+
+    @staticmethod
+    def modificar(product_id, tag_id, new_product_id=None, new_tag_id=None):
+        if not isinstance(product_id, int) or product_id <= 0:
+            print("O ID do produto é inválido.")
+            return
+
+        if not isinstance(tag_id, int) or tag_id <= 0:
+            print("O ID da tag é inválido.")
+            return
+
+        campos = []
+        valores = []
+
+        if new_product_id is not None:
+            if isinstance(new_product_id, int) and new_product_id > 0:
+                campos.append("product_id = %s")
+                valores.append(new_product_id)
+            else:
+                print("Novo ID de produto inválido.")
+                return
+
+        if new_tag_id is not None:
+            if isinstance(new_tag_id, int) and new_tag_id > 0:
+                campos.append("tag_id = %s")
+                valores.append(new_tag_id)
+            else:
+                print("Novo ID de tag inválido.")
+                return
+
+        if not campos:
+            print("Nenhum campo informado para modificação.")
+            return
+
+        valores.append(product_id)
+        valores.append(tag_id)
+
+        try:
+            with Transições() as cursor:
+                cursor.execute(
+                    f"""
+                    UPDATE product_tags
+                    SET {", ".join(campos)}
+                    WHERE product_id = %s AND tag_id = %s
+                    """,
+                    valores
+                )
+
+                if cursor.rowcount > 0:
+                    print("Relação modificada com sucesso!")
+                else:
+                    print("Relação não encontrada.")
+
+        except Exception as e:
+            print(f"Erro ao modificar relação: {e}")
 
         input("\nPressione 'Enter' para continuar...")
