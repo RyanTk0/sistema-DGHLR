@@ -204,16 +204,3 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
-
-CREATE TABLE IF NOT EXISTS orders_backup LIKE orders;
-
-SET GLOBAL event_scheduler = ON;
-
-DELIMITER $$
-CREATE EVENT IF NOT EXISTS ev_backup_orders
-ON SCHEDULE EVERY 1 DAY
-DO
-BEGIN
-    INSERT INTO orders_backup SELECT * FROM orders;
-END$$
-DELIMITER ;

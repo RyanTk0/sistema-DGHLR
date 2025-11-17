@@ -8,4 +8,6 @@ COMANDO PARA INSTALAR OS CONNECTORS: pip install mysql-connector-python
 
 COMANDO PARA INSTALAR O CANVAS: pip install reportlab
 
+COMANDO PARA INSTALAR O PYTEST: pip install pytest
+
 GIT HUB: https://github.com/RyanTk0/sistema-DGHLR
