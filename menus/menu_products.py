@@ -48,9 +48,9 @@ def menu_products():
                 print("ID inválido! O ID do produto deve ser um número inteiro.")
                 continue
 
-            novo_nome = input("Novo nome (ou Enter p/ manter): ")
-            novo_preco = input("Novo preço (ou Enter p/ manter): ")
-            novo_estoque = input("Novo estoque (ou Enter p/ manter): ")
+            novo_nome = input("Novo nome: ")
+            novo_preco = input("Novo preço: ")
+            novo_estoque = input("Novo estoque: ")
 
             nome_val = novo_nome if novo_nome.strip() else None
             preco_val = float(novo_preco) if novo_preco.strip() else None

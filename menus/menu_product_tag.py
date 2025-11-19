@@ -46,8 +46,8 @@ def menu_product_tag():
                 continue
 
             try:
-                new_product_id = int(input("Novo ID do produto (deixe em branco para manter o mesmo): ") or 0)
-                new_tag_id = int(input("Novo ID da tag (deixe em branco para manter o mesmo): ") or 0)
+                new_product_id = int(input("Novo ID do produto: ") or 0)
+                new_tag_id = int(input("Novo ID da tag: ") or 0)
 
                 if new_product_id <= 0 and new_tag_id <= 0:
                     print("Nenhum novo ID informado para modificar.")

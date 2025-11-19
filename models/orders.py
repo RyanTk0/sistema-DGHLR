@@ -44,6 +44,7 @@ class Order:
 
                 print(f"Pedido cadastrado com sucesso! ID do pedido: {order_id}")
                 return {"success": True, "order_id": order_id}
+
         except Exception as e:
             print(f"Erro ao salvar pedido: {e}")
             return {"success": False, "error": str(e)}
@@ -51,26 +52,33 @@ class Order:
     def usuario_existe(self):
         try:
             with Transições() as cursor:
-                cursor.execute("SELECT id FROM users WHERE id = %s", (self.user_id,))
+                cursor.execute(
+                    "SELECT id FROM users WHERE id = %s",
+                    (self.user_id,)
+                )
                 user = cursor.fetchone()
                 return user is not None
-        except Exception as e:
-            print(f"Erro ao verificar existência do usuário: {e}")
+        except:
             return False
 
     @staticmethod
     def listar():
         try:
             with Transições() as cursor:
-                cursor.execute("""
-                    SELECT o.id, o.user_id, u.name AS usuario, o.created_at AS data_pedido
+                cursor.execute(
+                    """
+                    SELECT 
+                        o.id, 
+                        o.user_id, 
+                        u.name AS usuario, 
+                        o.created_at AS data_pedido
                     FROM orders o
                     JOIN users u ON u.id = o.user_id
-                    ORDER BY o.id ASC;
-                """)
+                    ORDER BY o.id ASC
+                    """
+                )
                 return cursor.fetchall()
-        except Exception as e:
-            print(f"Erro ao listar pedidos: {e}")
+        except:
             return []
 
     @staticmethod
@@ -102,7 +110,6 @@ class Order:
                     """,
                     values
                 )
-
                 print("Pedido modificado com sucesso!")
         except Exception as e:
             print(f"Erro ao modificar pedido: {e}")
@@ -115,7 +122,10 @@ class Order:
 
         try:
             with Transições() as cursor:
-                cursor.execute("DELETE FROM orders WHERE id = %s", (order_id,))
+                cursor.execute(
+                    "DELETE FROM orders WHERE id = %s",
+                    (order_id,)
+                )
 
                 if cursor.rowcount > 0:
                     print("Pedido excluído com sucesso!")
@@ -123,3 +133,27 @@ class Order:
                     print("Pedido não encontrado.")
         except Exception as e:
             print(f"Erro ao excluir pedido: {e}")
+
+    @staticmethod
+    def atualizar_total_pedido(order_id):
+        if not isinstance(order_id, int) or order_id <= 0:
+            print("ID do pedido inválido para atualizar total.")
+            return
+
+        try:
+            with Transições() as cursor:
+                cursor.execute(
+                    """
+                    UPDATE orders
+                    SET total = (
+                        SELECT COALESCE(SUM(oi.quantity * oi.price), 0)
+                        FROM order_items oi
+                        WHERE oi.order_id = %s
+                    )
+                    WHERE id = %s
+                    """,
+                    (order_id, order_id)
+                )
+                print(f"Total do pedido {order_id} atualizado com sucesso!")
+        except Exception as e:
+            print(f"Erro ao atualizar total do pedido: {e}")

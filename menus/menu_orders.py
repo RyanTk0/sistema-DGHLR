@@ -26,12 +26,10 @@ def menu_orders():
                 print(f"Pedido cadastrado com sucesso! ID do pedido: {result['order_id']}")
             else:
                 print(f"Erro ao cadastrar pedido: {result['error']}")
-
             input("\nPressione 'Enter' para continuar...")
 
         elif opc == "2":
             pedidos = Order.listar()
-
             if pedidos:
                 print("\n==== LISTA DE PEDIDOS ====")
                 print(f"{'ID':<5} | {'User ID':<8} | {'Cliente':<15} | {'Data do Pedido'}")
@@ -41,7 +39,6 @@ def menu_orders():
                 print("=" * 50)
             else:
                 print("Nenhum pedido encontrado.")
-
             input("\nPressione 'Enter' para continuar...")
 
         elif opc == "3":
@@ -51,7 +48,7 @@ def menu_orders():
                 print("ID inválido! O ID do pedido deve ser um número inteiro.")
                 continue
 
-            novo_user = input("Novo user_id (ou Enter p/ manter): ")
+            novo_user = input("Novo user_id: ")
             user_val = int(novo_user) if novo_user.strip() else None
 
             Order.modificar(order_id, user_val)
